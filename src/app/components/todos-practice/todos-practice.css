@@ -1,0 +1,360 @@
+.todos-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .add-todo-section {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .todo-input, .search-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .todo-input:focus, .search-input:focus {
+      outline: none;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .btn-add {
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-add:active {
+      transform: translateY(0);
+    }
+
+    /* Status Filter Buttons */
+    .status-filter-section {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+      background: white;
+      color: #667eea;
+      border-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .filter-btn .count {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .filter-btn.active .count {
+      background: #667eea;
+      color: white;
+    }
+
+    .filter-section {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .result-count {
+      color: white;
+      font-weight: bold;
+      white-space: nowrap;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+
+    .todos-list {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-height: 200px;
+      max-height: 500px;
+      overflow-y: auto;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #ccc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      animation: slideIn 0.3s ease;
+    }
+
+    .todo-item[data-status="Pending"] {
+      border-left-color: #ffa726;
+    }
+
+    .todo-item[data-status="In Progress"] {
+      border-left-color: #42a5f5;
+    }
+
+    .todo-item[data-status="Complete"] {
+      border-left-color: #66bb6a;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .todo-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .todo-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .todo-text {
+      color: #333;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .todo-date {
+      color: #999;
+      font-size: 0.85rem;
+    }
+
+    .todo-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .status-select {
+      padding: 0.5rem 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .status-select:hover {
+      border-color: #667eea;
+    }
+
+    .status-select.status-pending {
+      color: #f57c00;
+      border-color: #ffa726;
+    }
+
+    .status-select.status-in-progress {
+      color: #1976d2;
+      border-color: #42a5f5;
+    }
+
+    .status-select.status-complete {
+      color: #388e3c;
+      border-color: #66bb6a;
+    }
+
+    .btn-remove {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-remove:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      padding: 2rem;
+      font-size: 1.1rem;
+    }
+
+    /* Statistics */
+    .statistics {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .statistics h3 {
+      color: white;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+    }
+
+    .stat-info {
+      flex: 1;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .stat-card.pending .stat-value {
+      color: #f57c00;
+    }
+
+    .stat-card.progress .stat-value {
+      color: #1976d2;
+    }
+
+    .stat-card.complete .stat-value {
+      color: #388e3c;
+    }
+
+    .stat-card.total .stat-value {
+      color: #667eea;
+    }
+
+    .debug-info {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      color: white;
+      backdrop-filter: blur(10px);
+    }
+
+    .debug-info h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .debug-info p {
+      margin: 0.5rem 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    .debug-info strong {
+      color: #ffd700;
+    }

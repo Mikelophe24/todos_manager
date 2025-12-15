@@ -1,0 +1,123 @@
+<div class="todos-container">
+      <h2>📝 Todos Practice - Angular Signals</h2>
+      
+      <!-- Add Todo Form -->
+      <div class="add-todo-section">
+        <input 
+          type="text" 
+          [(ngModel)]="newTodoText"
+          (keyup.enter)="handleAddTodo()"
+          placeholder="Nhập todo mới..."
+          class="todo-input"
+        />
+        <button (click)="handleAddTodo()" class="btn-add">
+          ➕ Thêm
+        </button>
+      </div>
+
+      <!-- Status Filter Buttons -->
+      <div class="status-filter-section">
+        <button 
+          *ngFor="let status of statusFilters"
+          (click)="statusFilter.set(status)"
+          [class.active]="statusFilter() === status"
+          class="filter-btn"
+        >
+          {{ getStatusIcon(status) }} {{ status }}
+          <span class="count">{{ getCountByStatus(status) }}</span>
+        </button>
+      </div>
+
+      <!-- Search/Filter Section -->
+      <div class="filter-section">
+        <input 
+          type="text" 
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+          placeholder="🔍 Tìm kiếm todos..."
+          class="search-input"
+        />
+        <span class="result-count">
+          Tìm thấy: {{ filteredTodos().length }} / {{ todos().length }}
+        </span>
+      </div>
+
+      <!-- Todos List -->
+      <div class="todos-list">
+        @if (filteredTodos().length === 0 && todos().length === 0) {
+          <p class="empty-message">Chưa có todo nào. Hãy thêm todo đầu tiên! 🎯</p>
+        }
+        
+        @if (filteredTodos().length === 0 && todos().length > 0) {
+          <p class="empty-message">Không tìm thấy todo nào phù hợp 🔍</p>
+        }
+        
+        @for (todo of filteredTodos(); track todo.id) {
+          <div class="todo-item" [attr.data-status]="todo.status">
+            <div class="todo-content">
+              <span class="todo-text">{{ todo.text }}</span>
+              <span class="todo-date">{{ formatDate(todo.createdAt) }}</span>
+            </div>
+            
+            <div class="todo-actions">
+              <!-- Status Selector -->
+              <select 
+                [ngModel]="todo.status"
+                (ngModelChange)="updateTodoStatus(todo.id, $event)"
+                class="status-select"
+                [class]="'status-' + todo.status.toLowerCase().replace(' ', '-')"
+              >
+                <option value="Pending">⏳ Pending</option>
+                <option value="In Progress">🔄 In Progress</option>
+                <option value="Complete">✅ Complete</option>
+              </select>
+              
+              <button 
+                (click)="removeTodo(todo.id)" 
+                class="btn-remove"
+                title="Xóa todo này"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Statistics -->
+      <div class="statistics">
+        <h3>📊 Thống Kê</h3>
+        <div class="stats-grid">
+          <div class="stat-card pending">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-info">
+              <div class="stat-label">Pending</div>
+              <div class="stat-value">{{ getCountByStatus('Pending') }}</div>
+            </div>
+          </div>
+          
+          <div class="stat-card progress">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-info">
+              <div class="stat-label">In Progress</div>
+              <div class="stat-value">{{ getCountByStatus('In Progress') }}</div>
+            </div>
+          </div>
+          
+          <div class="stat-card complete">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+              <div class="stat-label">Complete</div>
+              <div class="stat-value">{{ getCountByStatus('Complete') }}</div>
+            </div>
+          </div>
+          
+          <div class="stat-card total">
+            <div class="stat-icon">📝</div>
+            <div class="stat-info">
+              <div class="stat-label">Total</div>
+              <div class="stat-value">{{ todos().length }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
