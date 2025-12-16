@@ -1,0 +1,331 @@
+<!-- 👥 Admin Dashboard Template -->
+<div class="admin-dashboard-container">
+  
+  <!-- 📊 Header & Statistics -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1 class="title">
+        <span class="icon">👥</span>
+        User Management Dashboard
+      </h1>
+      
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-content">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">{{ adminService.stats().totalUsers }}</div>
+          </div>
+        </div>
+        
+        <div class="stat-card stat-success">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <div class="stat-label">Active</div>
+            <div class="stat-value">{{ adminService.stats().activeUsers }}</div>
+          </div>
+        </div>
+        
+        <div class="stat-card stat-warning">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-content">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value">{{ adminService.stats().pendingUsers }}</div>
+          </div>
+        </div>
+        
+        <div class="stat-card stat-danger">
+          <div class="stat-icon">🚫</div>
+          <div class="stat-content">
+            <div class="stat-label">Suspended</div>
+            <div class="stat-value">{{ adminService.stats().suspendedUsers }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- 🔍 Search & Filters -->
+  <section class="filters-section">
+    <!-- Search Bar -->
+    <div class="search-container">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by name or email..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange(searchQuery)"
+      />
+      @if (searchQuery) {
+        <button class="clear-btn" (click)="onSearchChange('')">✕</button>
+      }
+    </div>
+    
+    <!-- Filter Controls -->
+    <div class="filter-controls">
+      <select 
+        class="filter-select"
+        [(ngModel)]="selectedRole"
+        (change)="onRoleChange(selectedRole)"
+      >
+        <option value="all">All Roles</option>
+        @for (role of adminService.availableRoles(); track role) {
+          @if (role !== 'all') {
+            <option [value]="role">{{ role }}</option>
+          }
+        }
+      </select>
+      
+      <select 
+        class="filter-select"
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange(selectedStatus)"
+      >
+        <option value="all">All Statuses</option>
+        @for (status of adminService.availableStatuses(); track status) {
+          @if (status !== 'all') {
+            <option [value]="status">{{ status }}</option>
+          }
+        }
+      </select>
+      
+      <select 
+        class="filter-select"
+        [(ngModel)]="selectedDepartment"
+        (change)="onDepartmentChange(selectedDepartment)"
+      >
+        <option value="all">All Departments</option>
+        @for (dept of adminService.availableDepartments(); track dept) {
+          @if (dept !== 'all') {
+            <option [value]="dept">{{ dept }}</option>
+          }
+        }
+      </select>
+      
+      <button class="btn btn-secondary" (click)="onResetFilters()">
+        🔄 Reset
+      </button>
+    </div>
+    
+    <!-- Active Filter Chips -->
+    @if (adminService.activeFilterChips().length > 0) {
+      <div class="filter-chips">
+        <span class="chips-label">Active Filters:</span>
+        @for (chip of adminService.activeFilterChips(); track chip.key) {
+          <div class="filter-chip">
+            <span class="chip-label">{{ chip.label }}:</span>
+            <span class="chip-value">{{ chip.value }}</span>
+            <button class="chip-remove" (click)="onRemoveChip(chip.key)">✕</button>
+          </div>
+        }
+      </div>
+    }
+  </section>
+  
+  <!-- ⏳ Loading State -->
+  @if (adminService.loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading users...</p>
+    </div>
+  }
+  
+  <!-- 📊 Table Section -->
+  @else {
+    <section class="table-section">
+      
+      <!-- Table Controls -->
+      <div class="table-controls">
+        <div class="controls-left">
+          <!-- Selection Info -->
+          @if (adminService.selectedCount() > 0) {
+            <div class="selection-info">
+              <span class="selection-count">{{ adminService.selectedCount() }} selected</span>
+              <button class="btn btn-sm btn-text" (click)="adminService.clearSelection()">
+                Clear
+              </button>
+            </div>
+          }
+          
+          <!-- Bulk Actions -->
+          @if (adminService.selectedCount() > 0) {
+            <div class="bulk-actions">
+              <button class="btn btn-sm btn-danger" (click)="onBulkDelete()">
+                🗑️ Delete
+              </button>
+              <button class="btn btn-sm btn-secondary" (click)="onBulkEmail()">
+                📧 Email
+              </button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-secondary" (click)="toggleBulkActions()">
+                  🔄 Update Status ▼
+                </button>
+                @if (showBulkActions) {
+                  <div class="dropdown-menu">
+                    @for (status of statusOptions; track status) {
+                      <button class="dropdown-item" (click)="onBulkUpdateStatus(status)">
+                        {{ status }}
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        
+        <div class="controls-right">
+          <!-- Sort Controls -->
+          <select 
+            class="filter-select filter-select-sm"
+            [value]="adminService.sort().field"
+            (change)="onSortChange($any($event.target).value)"
+          >
+            @for (field of sortFields; track field.value) {
+              <option [value]="field.value">Sort: {{ field.label }}</option>
+            }
+          </select>
+          
+          <button 
+            class="btn btn-sm btn-icon"
+            (click)="toggleSortDirection()"
+            [title]="adminService.sort().direction === 'asc' ? 'Ascending' : 'Descending'"
+          >
+            {{ adminService.sort().direction === 'asc' ? '⬆️' : '⬇️' }}
+          </button>
+          
+          <!-- Export Button -->
+          <button class="btn btn-sm btn-primary" (click)="onExportCsv()">
+            📊 Export CSV
+          </button>
+        </div>
+      </div>
+      
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="th-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="adminService.isAllVisibleSelected()"
+                  (change)="onToggleAllVisible()"
+                  [disabled]="adminService.visibleRows().length === 0"
+                />
+              </th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Department</th>
+              <th>Joined</th>
+              <th>Last Active</th>
+              <th class="th-center">Tasks</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of adminService.visibleRows(); track user.id) {
+              <tr [class.row-selected]="isRowSelected(user.id)">
+                <td class="td-checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="isRowSelected(user.id)"
+                    (change)="onToggleRow(user.id)"
+                  />
+                </td>
+                <td class="td-name">
+                  <div class="user-info">
+                    <div class="user-avatar">{{ user.name.charAt(0) }}</div>
+                    <span class="user-name">{{ user.name }}</span>
+                  </div>
+                </td>
+                <td class="td-email">{{ user.email }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getRoleClass(user.role)">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="getStatusClass(user.status)">
+                    {{ user.status }}
+                  </span>
+                </td>
+                <td>{{ user.department }}</td>
+                <td class="td-date">{{ formatDate(user.joinedDate) }}</td>
+                <td class="td-date">
+                  <span class="relative-time">{{ getRelativeTime(user.lastActive) }}</span>
+                </td>
+                <td class="td-center">
+                  <span class="tasks-count">{{ user.tasksCompleted }}</span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="td-empty">
+                  <div class="empty-state">
+                    <span class="empty-icon">🔍</span>
+                    <p>No users found</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="pagination">
+        <div class="pagination-info">
+          Showing {{ (adminService.page() - 1) * adminService.pageSize() + 1 }} 
+          to {{ Math.min(adminService.page() * adminService.pageSize(), adminService.stats().filteredCount) }}
+          of {{ adminService.stats().filteredCount }} users
+        </div>
+        
+        <div class="pagination-controls">
+          <button 
+            class="btn btn-page"
+            (click)="onPageChange(adminService.page() - 1)"
+            [disabled]="adminService.page() === 1"
+          >
+            ← Prev
+          </button>
+          
+          @for (pageNum of getPageNumbers(); track pageNum) {
+            <button
+              class="btn btn-page-num"
+              [class.active]="pageNum === adminService.page()"
+              (click)="onPageChange(pageNum)"
+            >
+              {{ pageNum }}
+            </button>
+          }
+          
+          <button 
+            class="btn btn-page"
+            (click)="onPageChange(adminService.page() + 1)"
+            [disabled]="adminService.page() === adminService.totalPages()"
+          >
+            Next →
+          </button>
+        </div>
+        
+        <div class="pagination-size">
+          <select 
+            class="filter-select filter-select-sm"
+            [value]="adminService.pageSize()"
+            (change)="onPageSizeChange(+$any($event.target).value)"
+          >
+            @for (size of pageSizeOptions; track size) {
+              <option [value]="size">{{ size }} per page</option>
+            }
+          </select>
+        </div>
+      </div>
+      
+    </section>
+  }
+  
+</div>

@@ -1,0 +1,165 @@
+<!-- 📝 REGISTER FORM -->
+
+<div class="register-container">
+  <div class="register-card">
+    <!-- Header -->
+    <div class="register-header">
+      <h1>📝 Đăng Ký Tài Khoản</h1>
+      <p>Tạo tài khoản mới để bắt đầu</p>
+    </div>
+
+    <!-- Success Message -->
+    @if (success()) {
+      <div class="alert alert-success">
+        <span class="icon">✅</span>
+        <span>{{ success() }}</span>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (error()) {
+      <div class="alert alert-error">
+        <span class="icon">❌</span>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <!-- Register Form -->
+    <form (ngSubmit)="onRegister()" class="register-form">
+      
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username *</label>
+        <input
+          type="text"
+          id="username"
+          [value]="username()"
+          (input)="username.set($any($event.target).value); clearError()"
+          placeholder="Nhập username (ít nhất 3 ký tự)"
+          required
+        />
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input
+          type="email"
+          id="email"
+          [value]="email()"
+          (input)="email.set($any($event.target).value); clearError()"
+          placeholder="Nhập email"
+          required
+        />
+      </div>
+
+      <!-- First Name & Last Name -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Họ *</label>
+          <input
+            type="text"
+            id="firstName"
+            [value]="firstName()"
+            (input)="firstName.set($any($event.target).value); clearError()"
+            placeholder="Nhập họ"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Tên *</label>
+          <input
+            type="text"
+            id="lastName"
+            [value]="lastName()"
+            (input)="lastName.set($any($event.target).value); clearError()"
+            placeholder="Nhập tên"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Gender Field -->
+      <div class="form-group">
+        <label for="gender">Giới tính *</label>
+        <select
+          id="gender"
+          [value]="gender()"
+          (change)="gender.set($any($event.target).value); clearError()"
+          class="gender-select"
+        >
+          <option value="male">👨 Nam</option>
+          <option value="female">👩 Nữ</option>
+          <option value="other">🌈 Khác</option>
+        </select>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <div class="password-input">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            [value]="password()"
+            (input)="password.set($any($event.target).value); clearError()"
+            placeholder="Nhập password (ít nhất 6 ký tự)"
+            required
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+          >
+            {{ showPassword() ? '🙈' : '👁️' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="confirmPassword">Xác nhận Password *</label>
+        <div class="password-input">
+          <input
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            id="confirmPassword"
+            [value]="confirmPassword()"
+            (input)="confirmPassword.set($any($event.target).value); clearError()"
+            placeholder="Nhập lại password"
+            required
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+          >
+            {{ showConfirmPassword() ? '🙈' : '👁️' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn-register"
+        [disabled]="isLoading() || !username() || !password() || !email() || !firstName() || !lastName()"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Đang xử lý...</span>
+        } @else {
+          <span>📝 Đăng Ký</span>
+        }
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="register-footer">
+      <p>
+        Đã có tài khoản?
+        <a routerLink="/auth/login" class="link">Đăng nhập ngay</a>
+      </p>
+    </div>
+  </div>
+</div>

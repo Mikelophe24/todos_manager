@@ -1,0 +1,115 @@
+<div class="profile-container">
+  <div class="profile-content">
+    <!-- Back Button -->
+    <button class="back-btn" routerLink="/auth/dashboard">
+      ← Quay lại Dashboard
+    </button>
+
+    <!-- Header -->
+    <div class="profile-header">
+      <h1>👤 Thông Tin Profile</h1>
+    </div>
+
+    @if (user(); as currentUser) {
+      <!-- User Profile Card -->
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <img [src]="currentUser.image" [alt]="currentUser.username" />
+        </div>
+        
+        <div class="profile-details">
+          <h2>{{ fullName() }}</h2>
+          
+          <div class="detail-grid">
+            <div class="detail-item">
+              <div class="detail-label">🆔 User ID</div>
+              <div class="detail-value">{{ currentUser.id }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">👤 Username</div>
+              <div class="detail-value">{{ currentUser.username }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">📧 Email</div>
+              <div class="detail-value">{{ currentUser.email }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">⚧ Gender</div>
+              <div class="detail-value">{{ currentUser.gender }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">👨 First Name</div>
+              <div class="detail-value">{{ currentUser.firstName }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">👨 Last Name</div>
+              <div class="detail-value">{{ currentUser.lastName }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Token Management -->
+      <div class="token-management">
+        <h3>🔑 Token Management</h3>
+        
+        <!-- Access Token -->
+        <div class="token-section">
+          <div class="token-header">
+            <span class="token-title">Access Token</span>
+            <button 
+              class="copy-btn"
+              (click)="copyToClipboard(accessToken()!, 'Access Token')"
+            >
+              📋 Copy
+            </button>
+          </div>
+          <div class="token-content">{{ accessToken() }}</div>
+        </div>
+
+        <!-- Refresh Token -->
+        <div class="token-section">
+          <div class="token-header">
+            <span class="token-title">Refresh Token</span>
+            <button 
+              class="copy-btn"
+              (click)="copyToClipboard(refreshToken()!, 'Refresh Token')"
+            >
+              📋 Copy
+            </button>
+          </div>
+          <div class="token-content">{{ refreshToken() }}</div>
+        </div>
+
+        <!-- Refresh Button -->
+        <button 
+          class="refresh-btn"
+          (click)="onRefreshToken()"
+          [disabled]="isRefreshing()"
+        >
+          @if (isRefreshing()) {
+            <span class="spinner"></span>
+            <span>Đang refresh...</span>
+          } @else {
+            <span>🔄 Refresh Token Ngay</span>
+          }
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-primary" routerLink="/auth/dashboard">
+          📊 Dashboard
+        </button>
+        <button class="btn btn-danger" (click)="onLogout()">
+          🚪 Đăng Xuất
+        </button>
+      </div>
+    }
+  </div>
+</div>

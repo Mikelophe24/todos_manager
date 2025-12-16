@@ -1,0 +1,91 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Header -->
+    <div class="login-header">
+      <h1>🔐 Đăng Nhập</h1>
+      <p>Thực hành Authentication với DummyJSON API</p>
+    </div>
+
+    <!-- Error Message -->
+    @if (error()) {
+      <div class="error-message">
+        <span>❌ {{ error() }}</span>
+        <button type="button" (click)="clearError()" class="close-btn">×</button>
+      </div>
+    }
+
+    <!-- Login Form -->
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          [value]="username()"
+          (input)="username.set($any($event.target).value)"
+          placeholder="Nhập username"
+          required
+          [disabled]="isLoading()"
+        />
+        <small class="hint">💡 Thử: emilys</small>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            [value]="password()"
+            (input)="password.set($any($event.target).value)"
+            placeholder="Nhập password"
+            required
+            [disabled]="isLoading()"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [disabled]="isLoading()"
+          >
+            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <small class="hint">💡 Thử: emilyspass</small>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="isLoading() || !username() || !password()"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Đang đăng nhập...</span>
+        } @else {
+          <span>Đăng Nhập</span>
+        }
+      </button>
+    </form>
+
+    <!-- Info -->
+    <div class="info-box">
+      <h3>📚 Test Accounts (JSON Server)</h3>
+      <ul>
+        <li><strong>admin</strong> / admin123</li>
+        <li><strong>user</strong> / user123</li>
+      </ul>
+    </div>
+
+    <!-- Register Link -->
+    <div class="register-link">
+      <p>
+        Chưa có tài khoản?
+        <a routerLink="/auth/register">Đăng ký ngay</a>
+      </p>
+    </div>
+  </div>
+</div>

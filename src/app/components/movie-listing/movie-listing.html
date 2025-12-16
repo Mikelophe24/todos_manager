@@ -1,0 +1,296 @@
+<!-- 🎬 Movie Listing Template -->
+<div class="movie-listing-container">
+  
+  <!-- 📊 Header & Statistics -->
+  <header class="header">
+    <div class="header-content">
+      <h1 class="title">
+        <span class="icon">🎬</span>
+        Movie Collection
+      </h1>
+      
+      <!-- Statistics -->
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-label">Total Movies</span>
+          <span class="stat-value">{{ movieService.stats().total }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Filtered</span>
+          <span class="stat-value">{{ movieService.stats().filtered }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Showing</span>
+          <span class="stat-value">{{ movieService.stats().showing }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- 🔍 Search & Controls -->
+  <section class="controls">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by title or director..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange(searchQuery)"
+      />
+      @if (searchQuery) {
+        <button class="clear-btn" (click)="onSearchChange('')">✕</button>
+      }
+    </div>
+    
+    <div class="control-buttons">
+      <button class="btn btn-secondary" (click)="toggleFilters()">
+        <span>{{ showFilters ? '🔼' : '🔽' }}</span>
+        {{ showFilters ? 'Hide' : 'Show' }} Filters
+      </button>
+      
+      <button class="btn btn-secondary" (click)="onResetFilters()">
+        <span>🔄</span>
+        Reset All
+      </button>
+    </div>
+  </section>
+  
+  <!-- 🎯 Filters Panel -->
+  @if (showFilters) {
+    <section class="filters-panel">
+      <div class="filter-group">
+        <label class="filter-label">
+          <span class="label-icon">🎭</span>
+          Genre
+        </label>
+        <select 
+          class="filter-select"
+          [(ngModel)]="selectedGenre"
+          (change)="onGenreChange(selectedGenre)"
+        >
+          @for (genre of movieService.availableGenres(); track genre) {
+            <option [value]="genre">
+              {{ genre === 'all' ? 'All Genres' : genre }}
+            </option>
+          }
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">
+          <span class="label-icon">⭐</span>
+          Min Rating: {{ minRating }}
+        </label>
+        <input
+          type="range"
+          class="filter-range"
+          min="0"
+          max="10"
+          step="0.5"
+          [(ngModel)]="minRating"
+          (input)="onRatingChange(minRating)"
+        />
+        <div class="range-labels">
+          <span>0</span>
+          <span>5</span>
+          <span>10</span>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">
+          <span class="label-icon">📅</span>
+          Year Range
+        </label>
+        <div class="year-range">
+          <input
+            type="number"
+            class="year-input"
+            placeholder="From"
+            [(ngModel)]="yearFrom"
+            (change)="onYearRangeChange()"
+            min="1900"
+            [max]="yearTo"
+          />
+          <span class="range-separator">—</span>
+          <input
+            type="number"
+            class="year-input"
+            placeholder="To"
+            [(ngModel)]="yearTo"
+            (change)="onYearRangeChange()"
+            [min]="yearFrom"
+            max="2100"
+          />
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">
+          <span class="label-icon">📊</span>
+          Sort By
+        </label>
+        <div class="sort-controls">
+          <select 
+            class="filter-select"
+            [value]="movieService.sort().field"
+            (change)="onSortChange($any($event.target).value)"
+          >
+            @for (field of sortFields; track field.value) {
+              <option [value]="field.value">{{ field.label }}</option>
+            }
+          </select>
+          
+          <button 
+            class="btn btn-icon"
+            (click)="toggleSortDirection()"
+            [title]="movieService.sort().direction === 'asc' ? 'Ascending' : 'Descending'"
+          >
+            {{ movieService.sort().direction === 'asc' ? '⬆️' : '⬇️' }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">
+          <span class="label-icon">📏</span>
+          Items per page
+        </label>
+        <select 
+          class="filter-select"
+          [value]="movieService.pageSize()"
+          (change)="onPageSizeChange(+$any($event.target).value)"
+        >
+          @for (size of pageSizeOptions; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+      </div>
+    </section>
+  }
+  
+  <!-- ⏳ Loading State -->
+  @if (movieService.loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading movies...</p>
+    </div>
+  }
+  
+  <!-- 🎭 Empty States -->
+  @else if (movieService.emptyState().noMovies) {
+    <div class="empty-state">
+      <span class="empty-icon">🎬</span>
+      <h2>No Movies Available</h2>
+      <p>There are no movies in the collection yet.</p>
+    </div>
+  }
+  
+  @else if (movieService.emptyState().noResults) {
+    <div class="empty-state">
+      <span class="empty-icon">🔍</span>
+      <h2>No Results Found</h2>
+      <p>Try adjusting your filters or search query.</p>
+      <button class="btn btn-primary" (click)="onResetFilters()">
+        Reset Filters
+      </button>
+    </div>
+  }
+  
+  <!-- 🎬 Movie Grid -->
+  @else {
+    <section class="movies-grid">
+      @for (movie of movieService.pagedMovies(); track movie.id) {
+        <a [routerLink]="['/movies', movie.id]" class="movie-card-link">
+          <article class="movie-card">
+            <div class="movie-poster">
+              <img [src]="movie.poster" [alt]="movie.title" />
+              <div class="movie-overlay">
+                <div class="rating-badge">
+                  <span class="rating-icon">⭐</span>
+                  <span class="rating-value">{{ movie.rating }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="movie-content">
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              
+              <div class="movie-meta">
+                <span class="meta-item">
+                  <span class="meta-icon">🎭</span>
+                  {{ movie.genre }}
+                </span>
+                <span class="meta-item">
+                  <span class="meta-icon">📅</span>
+                  {{ movie.year }}
+                </span>
+                <span class="meta-item">
+                  <span class="meta-icon">⏱️</span>
+                  {{ formatDuration(movie.duration) }}
+                </span>
+              </div>
+              
+              <p class="movie-director">
+                <span class="director-icon">🎬</span>
+                {{ movie.director }}
+              </p>
+              
+              <p class="movie-description">{{ movie.description }}</p>
+              
+              <div class="movie-stars">
+                @for (filled of getStars(movie.rating); track $index) {
+                  <span class="star" [class.filled]="filled">
+                    {{ filled ? '★' : '☆' }}
+                  </span>
+                }
+              </div>
+            </div>
+          </article>
+        </a>
+      }
+    </section>
+    
+    <!-- 📄 Pagination -->
+    <section class="pagination">
+      <div class="pagination-info">
+        Showing {{ (movieService.page() - 1) * movieService.pageSize() + 1 }} 
+        to {{ Math.min(movieService.page() * movieService.pageSize(), movieService.stats().filtered) }}
+        of {{ movieService.stats().filtered }} movies
+      </div>
+      
+      <div class="pagination-controls">
+        <button 
+          class="btn btn-page"
+          (click)="previousPage()"
+          [disabled]="movieService.page() === 1"
+        >
+          ← Previous
+        </button>
+        
+        @for (pageNum of getPageNumbers(); track pageNum) {
+          <button
+            class="btn btn-page-num"
+            [class.active]="pageNum === movieService.page()"
+            (click)="goToPage(pageNum)"
+          >
+            {{ pageNum }}
+          </button>
+        }
+        
+        <button 
+          class="btn btn-page"
+          (click)="nextPage()"
+          [disabled]="movieService.page() === movieService.totalPages()"
+        >
+          Next →
+        </button>
+      </div>
+      
+      <div class="pagination-summary">
+        Page {{ movieService.page() }} of {{ movieService.totalPages() }}
+      </div>
+    </section>
+  }
+</div>

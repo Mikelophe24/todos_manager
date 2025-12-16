@@ -1,0 +1,159 @@
+<!-- 🎬 Movie Detail Template -->
+<div class="movie-detail-container">
+  
+  <!-- ⏳ Loading State -->
+  @if (movieService.loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading movie details...</p>
+    </div>
+  }
+  
+  <!-- ❌ Not Found State -->
+  @else if (notFound()) {
+    <div class="not-found">
+      <span class="not-found-icon">🎬</span>
+      <h1>Movie Not Found</h1>
+      <p>The movie you're looking for doesn't exist or has been removed.</p>
+      <button class="btn btn-primary" (click)="goBack()">
+        ← Back to Movies
+      </button>
+    </div>
+  }
+  
+  <!-- 🎬 Movie Detail -->
+  @else if (movie(); as movieData) {
+    <div class="movie-detail">
+      
+      <!-- Back Button -->
+      <button class="back-button" (click)="goBack()">
+        <span class="back-icon">←</span>
+        Back to Movies
+      </button>
+      
+      <!-- Movie Content -->
+      <div class="movie-content-wrapper">
+        
+        <!-- Left: Poster -->
+        <div class="poster-section">
+          <div class="poster-container">
+            <img 
+              [src]="movieData.poster" 
+              [alt]="movieData.title"
+              class="poster-image"
+            />
+            <div class="rating-overlay">
+              <div class="rating-badge" [style.background-color]="getRatingColor(movieData.rating)">
+                <span class="rating-icon">⭐</span>
+                <span class="rating-value">{{ movieData.rating }}</span>
+                <span class="rating-max">/10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right: Information -->
+        <div class="info-section">
+          
+          <!-- Title -->
+          <h1 class="movie-title">{{ movieData.title }}</h1>
+          
+          <!-- Metadata -->
+          <div class="metadata">
+            <div class="meta-item">
+              <span class="meta-icon">📅</span>
+              <span class="meta-label">Year:</span>
+              <span class="meta-value">{{ movieData.year }}</span>
+            </div>
+            
+            <div class="meta-item">
+              <span class="meta-icon">🎭</span>
+              <span class="meta-label">Genre:</span>
+              <span class="meta-value genre-badge">{{ movieData.genre }}</span>
+            </div>
+            
+            <div class="meta-item">
+              <span class="meta-icon">⏱️</span>
+              <span class="meta-label">Duration:</span>
+              <span class="meta-value">{{ formatDuration(movieData.duration) }}</span>
+            </div>
+            
+            <div class="meta-item">
+              <span class="meta-icon">🎬</span>
+              <span class="meta-label">Director:</span>
+              <span class="meta-value director-name">{{ movieData.director }}</span>
+            </div>
+          </div>
+          
+          <!-- Star Rating -->
+          <div class="star-rating-section">
+            <div class="star-rating-label">Rating:</div>
+            <div class="stars-large">
+              @for (filled of getStars(movieData.rating); track $index) {
+                <span class="star-large" [class.filled]="filled">
+                  {{ filled ? '★' : '☆' }}
+                </span>
+              }
+            </div>
+            <div class="rating-text">
+              {{ movieData.rating }} out of 10
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div class="description-section">
+            <h2 class="section-title">
+              <span class="title-icon">📖</span>
+              Synopsis
+            </h2>
+            <p class="description-text">{{ movieData.description }}</p>
+          </div>
+          
+          <!-- Additional Info -->
+          <div class="additional-info">
+            <div class="info-card">
+              <div class="info-card-icon">🎯</div>
+              <div class="info-card-content">
+                <div class="info-card-label">Movie ID</div>
+                <div class="info-card-value">#{{ movieData.id }}</div>
+              </div>
+            </div>
+            
+            <div class="info-card">
+              <div class="info-card-icon">⭐</div>
+              <div class="info-card-content">
+                <div class="info-card-label">Rating Score</div>
+                <div class="info-card-value">{{ movieData.rating }}/10</div>
+              </div>
+            </div>
+            
+            <div class="info-card">
+              <div class="info-card-icon">⏱️</div>
+              <div class="info-card-content">
+                <div class="info-card-label">Runtime</div>
+                <div class="info-card-value">{{ movieData.duration }} min</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button class="btn btn-primary" (click)="goBack()">
+              ← Back to Movies
+            </button>
+            <button class="btn btn-secondary" disabled>
+              🎬 Watch Trailer
+            </button>
+            <button class="btn btn-secondary" disabled>
+              ❤️ Add to Favorites
+            </button>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+  }
+  
+</div>

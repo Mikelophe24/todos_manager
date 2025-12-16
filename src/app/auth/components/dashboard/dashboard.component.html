@@ -1,0 +1,86 @@
+<div class="dashboard-container">
+  <div class="dashboard-content">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1>🎉 Chào mừng, {{ fullName() }}!</h1>
+      <p>Bạn đã đăng nhập thành công vào hệ thống</p>
+    </div>
+
+    <!-- User Info Card -->
+    @if (user(); as currentUser) {
+      <div class="user-card">
+        <div class="user-avatar">
+          <img [src]="currentUser.image" [alt]="currentUser.username" />
+        </div>
+        <div class="user-info">
+          <h2>{{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
+          <div class="info-row">
+            <span class="label">👤 Username:</span>
+            <span class="value">{{ currentUser.username }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">📧 Email:</span>
+            <span class="value">{{ currentUser.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">⚧ Gender:</span>
+            <span class="value">{{ currentUser.gender }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">🆔 ID:</span>
+            <span class="value">{{ currentUser.id }}</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Token Info -->
+    <div class="token-info">
+      <h3>🔑 Token Information</h3>
+      <div class="token-box">
+        <div class="token-label">Access Token:</div>
+        <div class="token-value">{{ authStore.accessToken()?.substring(0, 50) }}...</div>
+      </div>
+      <div class="token-box">
+        <div class="token-label">Refresh Token:</div>
+        <div class="token-value">{{ authStore.refreshToken()?.substring(0, 50) }}...</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-primary" routerLink="/auth/profile">
+        👤 Xem Profile
+      </button>
+      <button class="btn btn-secondary" (click)="onTestApiCall()">
+        🧪 Test API Call
+      </button>
+      <button class="btn btn-danger" (click)="onLogout()">
+        🚪 Đăng Xuất
+      </button>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+      <h3>💡 Thông tin hữu ích</h3>
+      <ul>
+        <li>✅ Token được tự động attach vào mọi HTTP request</li>
+        <li>✅ Khi token hết hạn (401), hệ thống tự động refresh</li>
+        <li>✅ Nếu refresh thất bại, bạn sẽ bị logout tự động</li>
+        <li>✅ Auth state được lưu trong localStorage</li>
+        <li>✅ Route guards bảo vệ các trang yêu cầu đăng nhập</li>
+      </ul>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+      <h3>🧭 Điều hướng</h3>
+      <div class="nav-links">
+        <a routerLink="/users" class="nav-link">📋 Users List</a>
+        <a routerLink="/movies" class="nav-link">🎬 Movies</a>
+        <a routerLink="/todos-practice" class="nav-link">✅ Todos</a>
+        <a routerLink="/admin" class="nav-link">👥 Admin</a>
+      </div>
+    </div>
+  </div>
+</div>

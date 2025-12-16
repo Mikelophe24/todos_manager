@@ -2,6 +2,48 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
 
+## 🔐 Authentication Module (NEW!)
+
+**Complete authentication system** với DummyJSON API đã được thêm vào!
+
+### 🚀 Quick Start
+```bash
+npm start
+# Mở http://localhost:4200
+# Login: emilys / emilyspass
+```
+
+### 📚 Documentation
+- **[START_HERE.md](./START_HERE.md)** ← Bắt đầu từ đây!
+- **[AUTH_INDEX.md](./AUTH_INDEX.md)** - Lộ trình học
+- **[AUTH_README.md](./AUTH_README.md)** - Tổng quan
+- **[AUTH_GUIDE.md](./AUTH_GUIDE.md)** - Hướng dẫn chi tiết
+- **[AUTH_QUICK_REF.md](./AUTH_QUICK_REF.md)** - Tra cứu nhanh
+- **[AUTH_DEMO_GUIDE.md](./AUTH_DEMO_GUIDE.md)** - Test scenarios
+
+### ✨ Features
+✅ Login/Logout với DummyJSON API  
+✅ State management với Angular Signals  
+✅ HTTP Interceptor (auto attach token + handle 401)  
+✅ Route Guards (auth protection)  
+✅ Token refresh tự động  
+✅ LocalStorage persistence  
+✅ Comprehensive documentation (Vietnamese)  
+
+### 📁 Location
+```
+src/app/auth/
+├── models/          # Interfaces
+├── store/           # State management
+├── services/        # API calls
+├── interceptors/    # HTTP interceptor
+├── guards/          # Route guards
+└── components/      # UI components
+```
+
+---
+
+
 ## Development server
 
 To start a local development server, run:

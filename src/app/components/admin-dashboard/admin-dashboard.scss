@@ -1,0 +1,718 @@
+// 👥 Admin Dashboard Styles
+// Professional admin panel design
+
+.admin-dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// ============================================
+// 📊 HEADER & STATISTICS
+// ============================================
+
+.dashboard-header {
+  margin-bottom: 2rem;
+  
+  .header-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    .icon {
+      font-size: 2.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      
+      .icon {
+        font-size: 2rem;
+      }
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .stat-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+  }
+  
+  .stat-content {
+    flex: 1;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+  
+  &.stat-success .stat-value {
+    color: #10b981;
+  }
+  
+  &.stat-warning .stat-value {
+    color: #f59e0b;
+  }
+  
+  &.stat-danger .stat-value {
+    color: #ef4444;
+  }
+}
+
+// ============================================
+// 🔍 FILTERS SECTION
+// ============================================
+
+.filters-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+  position: relative;
+  margin-bottom: 1rem;
+  
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    pointer-events: none;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0.875rem 3rem 0.875rem 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.6);
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .clear-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #6b7280;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: #1f2937;
+    }
+  }
+}
+
+.filter-controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.6);
+    background: white;
+  }
+  
+  &.filter-select-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+.filter-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  
+  .chips-label {
+    font-size: 0.875rem;
+    color: white;
+    font-weight: 600;
+  }
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  color: white;
+  
+  .chip-label {
+    font-weight: 600;
+  }
+  
+  .chip-value {
+    font-weight: 400;
+  }
+  
+  .chip-remove {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    margin-left: 0.25rem;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+// ============================================
+// 📊 TABLE SECTION
+// ============================================
+
+.table-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  
+  .controls-left,
+  .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+}
+
+.selection-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: #eff6ff;
+  border-radius: 8px;
+  
+  .selection-count {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e40af;
+  }
+}
+
+.bulk-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dropdown {
+  position: relative;
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+    z-index: 10;
+    
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      
+      &:hover {
+        background: #f3f4f6;
+      }
+      
+      &:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+      
+      &:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+    }
+  }
+}
+
+// ============================================
+// 📋 TABLE
+// ============================================
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  
+  thead {
+    background: #f9fafb;
+    
+    tr {
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      
+      &.th-checkbox {
+        width: 40px;
+        text-align: center;
+      }
+      
+      &.th-center {
+        text-align: center;
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid #e5e7eb;
+      transition: background 0.2s ease;
+      
+      &:hover {
+        background: #f9fafb;
+      }
+      
+      &.row-selected {
+        background: #eff6ff;
+        
+        &:hover {
+          background: #dbeafe;
+        }
+      }
+    }
+    
+    td {
+      padding: 1rem;
+      color: #374151;
+      
+      &.td-checkbox {
+        width: 40px;
+        text-align: center;
+      }
+      
+      &.td-center {
+        text-align: center;
+      }
+      
+      &.td-empty {
+        padding: 3rem;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.td-email {
+  color: #6b7280;
+}
+
+.td-date {
+  color: #6b7280;
+  font-size: 0.8125rem;
+}
+
+.relative-time {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.tasks-count {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #f3f4f6;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+// ============================================
+// 🏷️ BADGES
+// ============================================
+
+.badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+// Role badges
+.role-admin {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.role-manager {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.role-developer {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.role-designer {
+  background: #fce7f3;
+  color: #9f1239;
+}
+
+.role-viewer {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+// Status badges
+.status-active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-inactive {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-suspended {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+// ============================================
+// 📄 PAGINATION
+// ============================================
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.pagination-info,
+.pagination-size {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+// ============================================
+// 🎨 BUTTONS
+// ============================================
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+  
+  &.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+  
+  &.btn-icon {
+    padding: 0.5rem;
+    min-width: 36px;
+    justify-content: center;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  
+  &:not(:disabled):hover {
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+}
+
+.btn-secondary {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  
+  &:not(:disabled):hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+  
+  &:not(:disabled):hover {
+    background: #dc2626;
+  }
+}
+
+.btn-text {
+  background: none;
+  color: #667eea;
+  padding: 0.25rem 0.5rem;
+  
+  &:not(:disabled):hover {
+    background: #eff6ff;
+    transform: none;
+  }
+}
+
+.btn-page {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 1rem;
+  
+  &:not(:disabled):hover {
+    background: #f9fafb;
+  }
+}
+
+.btn-page-num {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  min-width: 40px;
+  justify-content: center;
+  
+  &.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+  }
+  
+  &:not(:disabled):hover:not(.active) {
+    background: #f9fafb;
+  }
+}
+
+// ============================================
+// ⏳ LOADING & EMPTY STATES
+// ============================================
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: white;
+  
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  
+  .empty-icon {
+    font-size: 3rem;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+// ============================================
+// 🎬 ANIMATIONS
+// ============================================
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
