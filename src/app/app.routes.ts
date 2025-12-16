@@ -51,7 +51,6 @@ export const routes: Routes = [
     ]
   },
 
-  // 📋 EXISTING ROUTES
   {
     path: 'users',
     component: UserComponent

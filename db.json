@@ -45,6 +45,18 @@
       "image": "https://i.pravatar.cc/150?img=4",
       "role": "user",
       "createdAt": "2025-12-16T08:19:37.389Z"
+    },
+    {
+      "id": "630e",
+      "username": "minh1",
+      "password": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+      "email": "minhvutr12i12@gmail.com",
+      "firstName": "minh",
+      "lastName": "vu",
+      "gender": "male",
+      "image": "https://i.pravatar.cc/150?img=5",
+      "role": "user",
+      "createdAt": "2025-12-16T09:33:48.228Z"
     }
   ],
   "posts": [],
