@@ -1,6 +1,7 @@
-import { Component, signal, computed, effect, untracked } from '@angular/core';
+import { Component, signal, computed, effect, untracked, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TodosService } from '../../services/todos.service';
 
 // 📋 Interface cho Todo với status
 export interface Todo {
@@ -18,7 +19,7 @@ export type StatusFilter = 'All' | 'Pending' | 'In Progress' | 'Complete';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './todos-practice.html',
-  styleUrls: ['todos-practice.css'] 
+  styleUrls: ['todos-practice.css'],
 })
 export class TodosPracticeComponent {
   todos = signal<Todo[]>([]);
@@ -29,70 +30,65 @@ export class TodosPracticeComponent {
   // Biến tạm để lưu text input (không phải signal)
   newTodoText = '';
 
-  // Counter để tạo unique ID
-  private nextId = 1;
-
   // Danh sách các status filters
   statusFilters: StatusFilter[] = ['All', 'Pending', 'In Progress', 'Complete'];
 
-  constructor() {
-    // Đọc todos từ localStorage khi khởi tạo component
-    this.loadTodosFromLocalStorage();
+  // Inject TodosService
+  private todosService = inject(TodosService);
 
-    // Effect để lưu todos vào localStorage mỗi khi thay đổi
-    effect(() => {
-      // Đọc todos (tracked - effect sẽ chạy lại khi todos thay đổi)
-      const currentTodos = this.todos();
-      
-      // Đọc query và statusFilter bằng untracked (không tạo dependency)
-      const currentQuery = untracked(() => this.query());
-      const currentStatusFilter = untracked(() => this.statusFilter());
-      
-      // Lưu vào localStorage
-      localStorage.setItem('angular_todos_practice_v2', JSON.stringify(currentTodos));
-      
-      // Log để debug
-      console.log('💾 Saved to localStorage:', {
-        todosCount: currentTodos.length,
-        currentQuery: currentQuery,
-        currentStatusFilter: currentStatusFilter,
-        timestamp: new Date().toLocaleTimeString()
-      });
-    });
+  constructor() {
+    // Đọc todos từ JSON Server khi khởi tạo component
+    this.loadTodosFromServer();
   }
 
-  // Hàm addTodo - dùng update để thêm todo
+  // Hàm addTodo - gọi API để thêm todo
   addTodo(text: string): void {
     if (!text.trim()) {
       return; // Không thêm todo rỗng
     }
 
-    this.todos.update(currentTodos => {
-      const newTodo: Todo = {
-        id: this.nextId++,
-        text: text.trim(),
-        status: 'Pending', // Mặc định là Pending
-        createdAt: new Date()
-      };
-      return [...currentTodos, newTodo];
+    const newTodo: Omit<Todo, 'id'> = {
+      text: text.trim(),
+      status: 'Pending', // Mặc định là Pending
+      createdAt: new Date(),
+    };
+
+    this.todosService.addTodo(newTodo).subscribe({
+      next: (createdTodo) => {
+        this.todos.update((currentTodos) => [...currentTodos, createdTodo]);
+        console.log('✅ Todo added:', createdTodo);
+      },
+      error: (error) => {
+        console.error('❌ Error adding todo:', error);
+      },
     });
   }
 
-  // Hàm removeTodo - dùng update để xóa todo theo id
+  // Hàm removeTodo - gọi API để xóa todo
   removeTodo(id: number): void {
-    this.todos.update(currentTodos => {
-      return currentTodos.filter(todo => todo.id !== id);
-    }); 
+    this.todosService.deleteTodo(id).subscribe({
+      next: () => {
+        this.todos.update((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+        console.log('✅ Todo deleted:', id);
+      },
+      error: (error) => {
+        console.error('❌ Error deleting todo:', error);
+      },
+    });
   }
 
-  // Hàm updateTodoStatus - cập nhật status của todo
+  // Hàm updateTodoStatus - gọi API để cập nhật status
   updateTodoStatus(id: number, newStatus: string): void {
-    this.todos.update(currentTodos => {
-      return currentTodos.map(todo => 
-        todo.id === id 
-          ? { ...todo, status: newStatus as Todo['status'] }
-          : todo
-      );
+    this.todosService.updateTodo(id, { status: newStatus as Todo['status'] }).subscribe({
+      next: (updatedTodo) => {
+        this.todos.update((currentTodos) =>
+          currentTodos.map((todo) => (todo.id === id ? updatedTodo : todo))
+        );
+        console.log('✅ Todo updated:', updatedTodo);
+      },
+      error: (error) => {
+        console.error('❌ Error updating todo:', error);
+      },
     });
   }
 
@@ -105,14 +101,12 @@ export class TodosPracticeComponent {
     // Lọc theo status trước
     let filtered = allTodos;
     if (status !== 'All') {
-      filtered = filtered.filter(todo => todo.status === status);
+      filtered = filtered.filter((todo) => todo.status === status);
     }
 
     // Sau đó lọc theo search query
     if (searchQuery) {
-      filtered = filtered.filter(todo => 
-        todo.text.toLowerCase().includes(searchQuery)
-      );
+      filtered = filtered.filter((todo) => todo.text.toLowerCase().includes(searchQuery));
     }
 
     return filtered;
@@ -129,18 +123,7 @@ export class TodosPracticeComponent {
     if (status === 'All') {
       return this.todos().length;
     }
-    return this.todos().filter(todo => todo.status === status).length;
-  }
-
-  // Helper method để lấy icon cho status
-  getStatusIcon(status: StatusFilter): string {
-    const icons: Record<StatusFilter, string> = {
-      'All': '📋',
-      'Pending': '⏳',
-      'In Progress': '🔄',
-      'Complete': '✅'
-    };
-    return icons[status];   
+    return this.todos().filter((todo) => todo.status === status).length;
   }
 
   // Helper method để format date
@@ -156,34 +139,22 @@ export class TodosPracticeComponent {
     if (minutes < 60) return `${minutes} phút trước`;
     if (hours < 24) return `${hours} giờ trước`;
     if (days < 7) return `${days} ngày trước`;
-    
+
     return d.toLocaleDateString('vi-VN');
   }
 
-  // Helper method để load todos từ localStorage
-  private loadTodosFromLocalStorage(): void {
-    try {
-      const saved = localStorage.getItem('angular_todos_practice_v2');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          // Convert createdAt string back to Date object
-          const todos = parsed.map(todo => ({
-            ...todo,
-            createdAt: new Date(todo.createdAt)
-          }));
-          this.todos.set(todos);
-          
-          // Update nextId to be higher than the highest existing id
-          if (todos.length > 0) {
-            this.nextId = Math.max(...todos.map(t => t.id)) + 1;
-          }
-          
-          console.log('📂 Loaded from localStorage:', todos.length, 'todos');
-        }
-      }
-    } catch (error) {
-      console.error('❌ Error loading from localStorage:', error);
-    }
+  // Helper method để load todos từ JSON Server
+  private loadTodosFromServer(): void {
+    this.todosService.getAllTodos().subscribe({
+      next: (todos) => {
+        // Convert createdAt strings to Date objects
+        const parsedTodos = todos.map((todo) => ({
+          ...todo,
+          createdAt: new Date(todo.createdAt),
+        }));
+        this.todos.set(parsedTodos);
+      },
+      error: (error) => {},
+    });
   }
 }

@@ -33,7 +33,6 @@ export interface Company {
 
 
 
-// user.service.ts
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private apiUrl = 'https://jsonplaceholder.typicode.com/users';

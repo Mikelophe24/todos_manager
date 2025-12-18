@@ -56,14 +56,7 @@ export class MovieListingComponent implements OnInit {
     // Load movies khi component khởi tạo
     this.movieService.loadMovies();
   }
-  
-  // ============================================
-  // 🔍 SEARCH & FILTER HANDLERS
-  // ============================================
-  
-  /**
-   * Handle search input change
-   */
+
   onSearchChange(query: string): void {
     this.searchQuery = query;
     this.movieService.setQuery(query);
@@ -108,14 +101,7 @@ export class MovieListingComponent implements OnInit {
     this.yearTo = new Date().getFullYear();
     this.movieService.resetFilters();
   }
-  
-  // ============================================
-  // 📊 SORT HANDLERS
-  // ============================================
-  
-  /**
-   * Handle sort change
-   */
+
   onSortChange(field: SortField): void {
     this.movieService.setSort(field);
   }
